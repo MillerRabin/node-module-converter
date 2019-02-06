@@ -3,6 +3,7 @@ const fs = require('fs');
 const rimraf = require('rimraf');
 const recursive = require('recursive-readdir');
 const mkdirp = require('mkdirp-promise');
+const replace = require('./replace.js');
 const projectPath = process.cwd();
 const targetPath = path.join(projectPath, 'browser');
 
@@ -15,12 +16,6 @@ function ignore(file, stats) {
 
 }
 
-function toImport(str) {
-    let output = str.replace(/module.exports\s*=\s*/, 'export default ');
-    output = output.replace(/const\s+(.+)\s*=\s*require\('(.+)'\);/g, 'import $1 from "$2";');
-    return output;
-}
-
 recursive(projectPath, ['node_modules', '.git', 'test', 'browser', '.idea', 'builder', ignore], async function (err, files) {
     for (let file of files) {
         console.log(`processing file ${ file }`);
@@ -30,7 +25,7 @@ recursive(projectPath, ['node_modules', '.git', 'test', 'browser', '.idea', 'bui
         await mkdirp(tPath);
         const target = path.join(targetPath, rPath);
         const buffer = fs.readFileSync(file);
-        const output = toImport(buffer.toString());
+        const output = replace.toImport(buffer.toString());
         fs.writeFileSync(target, output);
     }
 });
