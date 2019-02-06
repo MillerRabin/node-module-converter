@@ -23,6 +23,7 @@ function toImport(str) {
 
 recursive(projectPath, ['node_modules', '.git', 'test', 'browser', '.idea', 'builder', ignore], async function (err, files) {
     for (let file of files) {
+        console.log(`processing file ${ file }`);
         const rPath = path.relative(projectPath, file);
         const rs = path.parse(rPath);
         const tPath = path.join(targetPath, rs.dir);
