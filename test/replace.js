@@ -3,6 +3,7 @@ const assert = require('assert');
 
 const nodeModule = "const IntentionStorage = require('intention-storage');";
 const localModule = "const IntentionStorage = require('./main.js');";
+const deleteModule = "const delReq = require('del-req'); //Delete for Browser environment";
 
 describe('Intenion builder', function () {
     describe('toImport', function () {
@@ -14,5 +15,11 @@ describe('Intenion builder', function () {
             const nm = replace.toImport(localModule);
             assert.strictEqual(nm, 'import IntentionStorage  from "./main.js";');
         });
+
+        it('Delete require by comment', function () {
+            const nm = replace.toImport(deleteModule);
+            assert.strictEqual(nm, '');
+        });
+
     });
 });
