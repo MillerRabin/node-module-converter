@@ -26,8 +26,8 @@ recursive(projectPath, ['node_modules', '.git', 'test', 'browser', '.idea', 'bui
         await mkdirp(tPath);
         const target = path.join(targetPath, rPath);
         const buffer = fs.readFileSync(file);
-        let replace = replace.toImport(buffer.toString());
-        const output = version.build(replace);
+        let rStr = replace.toImport(buffer.toString());
+        const output = version.build(rStr);
         fs.writeFileSync(target, output);
     }
 });
