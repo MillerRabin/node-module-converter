@@ -4,6 +4,7 @@ const rimraf = require('rimraf');
 const recursive = require('recursive-readdir');
 const mkdirp = require('mkdirp-promise');
 const replace = require('./replace.js');
+const version = require('./version.js');
 const projectPath = process.cwd();
 const targetPath = path.join(projectPath, 'browser');
 
@@ -25,7 +26,8 @@ recursive(projectPath, ['node_modules', '.git', 'test', 'browser', '.idea', 'bui
         await mkdirp(tPath);
         const target = path.join(targetPath, rPath);
         const buffer = fs.readFileSync(file);
-        const output = replace.toImport(buffer.toString());
+        let replace = replace.toImport(buffer.toString());
+        const output = version.build(replace);
         fs.writeFileSync(target, output);
     }
 });
